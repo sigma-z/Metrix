@@ -69,7 +69,14 @@ class pDependSummary
 
         $result = array();
         if ($path) {
-            $items = $isCollection ? $data[$key] : array($data[$key]);
+            // simple-xml maps entities with one entry not to a collection
+            if ($isCollection && isset($data[$key][0])) {
+				$items = $data[$key];
+			}
+			else {
+				$items = array($data[$key]);
+			}
+            
             foreach ($items as $item) {
                 if ($key !== '@attributes' && isset($item['@attributes']['name'])) {
                     $additionalData[$key] = $item['@attributes']['name'];
