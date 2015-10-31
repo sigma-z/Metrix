@@ -1,0 +1,17 @@
+{
+    "name": "sigma-z/metrix",
+    "description": "Metric fetcher from pdepend summary.xml",
+    "require": {
+        "php": ">=5.3"
+    },
+    "suggest": {
+        "pdepend/pdepend": "creates something to fetch from"
+    },
+    "authors": [
+        {
+            "name": "Steffen Zeidler",
+            "email": "sigma_z@sigma-scripts.de"
+        }
+    ],
+    "minimum-stability": "dev"
+}
