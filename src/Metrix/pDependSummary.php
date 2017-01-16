@@ -58,27 +58,34 @@ class pDependSummary
     private function getDataByPath(
         array $data, array $path, CodeMetric $metric, array $additionalData = array()
     ) {
+        $subKey = '';
+        $isCollection = false;
         $key = array_shift($path);
-        $isCollection = substr($key, -2) == '[]';
-        if ($isCollection) {
-            $key = substr($key, 0, -2);
+        if (preg_match('/\[(.*)?]/', $key, $matches) > 0) {
+            $subKey = $matches[1];
+            $isCollection = true;
+            $key = substr($key, 0, - (strlen($subKey) + 2));
         }
+
         if (!isset($data[$key])) {
             return array();
         }
 
         $result = array();
-        if ($path) {
-            // simple-xml maps entities with one entry not to a collection
-            if ($isCollection && isset($data[$key][0])) {
-				$items = $data[$key];
-			}
-			else {
-				$items = array($data[$key]);
-			}
-            
+        if ($path && isset($data[$key])) {
+            $items = $isCollection
+                ? $this->getItemsFromCollection($data[$key], $subKey)
+                : array($data[$key]);
+
+            if (isset($items['@attributes'])) {
+                $items = array($items);
+            }
+
             foreach ($items as $item) {
-                if ($key !== '@attributes' && isset($item['@attributes']['name'])) {
+                if ($subKey) {
+                    $additionalData = array();
+                }
+                else if ($key !== '@attributes' && isset($item['@attributes']['name'])) {
                     $additionalData[$key] = $item['@attributes']['name'];
                 }
                 $resultItem = $this->getDataByPath($item, $path, $metric, $additionalData);
@@ -114,6 +121,27 @@ class pDependSummary
             }
         }
         return true;
+    }
+
+
+    /**
+     * @param array  $items
+     * @param string $subKey
+     * @return array
+     */
+    private function getItemsFromCollection(array $items, $subKey)
+    {
+        if ($subKey) {
+            $subKeyParts = explode('=', $subKey, 2);
+            if (count($subKeyParts) > 1) {
+                if (isset($items[$subKeyParts[0]]) && $items[$subKeyParts[0]] === $subKeyParts[1]) {
+                    return array($items);
+                }
+                return array();
+            }
+            return isset($items[$subKey]) ? $items[$subKey] : array();
+        }
+        return $items;
     }
 
 }

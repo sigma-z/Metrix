@@ -10,7 +10,7 @@ Fetches metrics from pdepend summary.xml.
 
 ## Usage
 
-Fetching metric data from pdepend's summary.xml
+Fetching lines of code from pdepend's summary.xml
 
 ```php
 $metric = new CodeMetric('package[].class[].@attributes.loc');
@@ -39,3 +39,25 @@ Output example:
         }
         .. more entries ..
     }
+    
+
+Fetching lines of code of a class from pdepend's summary.xml
+
+```php
+$metric = new CodeMetric('package[].class[].@attributes[name=SampleClass].loc');
+$pDependSummary = new pDependSummary();
+$pDependSummary->loadFromFile('data/summary.xml');
+$result = $pDependSummary->fetchMetric($metric);
+var_dump($result);
+```
+
+Output example:
+
+    array(1) {
+      [0] =>
+      array(1) {
+        'loc' =>
+        string(4) "1234"
+      }
+    }
+
