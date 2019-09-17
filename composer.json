@@ -2,10 +2,12 @@
     "name": "sigma-z/metrix",
     "description": "Metric fetcher from pdepend summary.xml",
     "require": {
-        "php": ">=5.3"
-    },
-    "suggest": {
-        "pdepend/pdepend": "creates something to fetch from"
+        "php": "@stable",
+        "symfony/console": "@stable"
+    }
+    ,
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
     },
     "authors": [
         {
