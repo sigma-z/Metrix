@@ -13,5 +13,10 @@
             "email": "sigma_z@sigma-scripts.de"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "SigmaZ\\": "src/"
+        }
+    },
     "minimum-stability": "dev"
 }
